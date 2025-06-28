@@ -70,10 +70,10 @@
       document.body.appendChild(img);
       const obj = {
         el: img,
-        x: Math.random() * (window.innerWidth - 130),
-        y: Math.random() * (window.innerHeight - 130),
-        dx: (Math.random() - 0.5) * 3,
-        dy: (Math.random() - 0.5) * 3,
+        x: Math.random() * (window.innerWidth - 100),
+        y: Math.random() * (window.innerHeight - 100),
+        dx: (Math.random() - 0.5) * 1,
+        dy: (Math.random() - 0.5) * 1,
         damping: 0.88,
         isDragging: false,
         offsetX: 0,
@@ -131,12 +131,12 @@
           face.y += face.dy;
           face.dy += 0.5;
 
-          if (face.x <= 0 || face.x >= window.innerWidth - 130) {
+          if (face.x <= 0 || face.x >= window.innerWidth - 100) {
             face.dx *= -face.damping;
-            face.x = Math.max(0, Math.min(window.innerWidth - 130, face.x));
+            face.x = Math.max(0, Math.min(window.innerWidth - 100, face.x));
           }
 
-          if (face.y >= window.innerHeight - 130) {
+          if (face.y >= window.innerHeight - 100) {
           // Jika terlalu kecil dalam jangka waktu lama, hentikan
           if (Math.abs(face.dy) < 0.6 && Math.abs(face.dx) < 0.3) {
             face.dy = 0;
@@ -144,7 +144,7 @@
             continue;
           }
             face.dy *= -face.damping;
-            face.y = window.innerHeight - 130;
+            face.y = window.innerHeight - 100;
 
             if (Math.abs(face.dy) < 0.8) face.dy = 0;
             if (Math.abs(face.dx) < 0.4) face.dx = 0;
@@ -166,7 +166,7 @@
         const rainImg = document.createElement("img");
         rainImg.src = "friend_face.png";
         rainImg.className = "falling";
-        rainImg.style.left = Math.random() * (window.innerWidth - 130) + "px";
+        rainImg.style.left = Math.random() * (window.innerWidth - 100) + "px";
         rainImg.style.top = "-150px";
         rainImg.style.animationDuration = (Math.random() * 2 + 1) + "s";
         document.body.appendChild(rainImg);
