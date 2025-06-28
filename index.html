@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>BounceBuddy – Teman Lompat-Lompat yang Menghibur!</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-image: url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            font-family: sans-serif;
+            text-align: center;
+            color: #fff;
+        }
+        #btn-message {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            color: #222;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        #btn-message:hover {
+            background: #ffeb3b;
+        }
+        .face {
+            position: absolute;
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <a id="btn-message" href="message.html">💌 Pesan Spesial</a>
+    <script>
+        const NUM_FACES = 15;
+        const faces = [];
+        for (let i = 0; i < NUM_FACES; i++) {
+            const img = document.createElement("img");
+            img.src = "friend_face.png";
+            img.className = "face";
+            document.body.appendChild(img);
+            faces.push({el: img, x: Math.random()*window.innerWidth, y: Math.random()*window.innerHeight, dx: (Math.random()*4)+1, dy: (Math.random()*4)+1});
+        }
+
+        function animate() {
+            faces.forEach(face => {
+                face.x += face.dx;
+                face.y += face.dy;
+
+                if (face.x <= 0 || face.x >= window.innerWidth - 130) face.dx *= -1;
+                if (face.y <= 0 || face.y >= window.innerHeight - 130) face.dy *= -1;
+
+                face.el.style.left = face.x + "px";
+                face.el.style.top = face.y + "px";
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
+</body>
+</html>
