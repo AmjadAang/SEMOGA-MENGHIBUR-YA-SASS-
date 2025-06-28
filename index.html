@@ -1,0 +1,172 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>BounceBuddy – Teman Lompat-Lompat yang Menghibur!</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: url('background.jpg') no-repeat center center fixed;
+            background-size: cover;
+            font-family: sans-serif;
+        }
+        #btn-message, #btn-rain {
+            position: absolute;
+            top: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            color: #222;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background 0.3s;
+            z-index: 100;
+        }
+        #btn-message:hover, #btn-rain:hover {
+            background: #ffeb3b;
+        }
+        #btn-message {
+            right: 20px;
+        }
+        #btn-rain {
+            right: 140px;
+        }
+        .face {
+            position: absolute;
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            pointer-events: auto;
+            touch-action: none;
+            user-select: none;
+        }
+        .falling {
+            animation: fall linear;
+            position: absolute;
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+        }
+        @keyframes fall {
+            0% {
+                transform: translateY(-150px);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0.8;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a id="btn-message" href="message.html">💌 Pesan Spesial</a>
+    <button id="btn-rain">🌧️ Rain Saski</button>
+
+    <script>
+        const NUM_STATIC = 5;
+        const faces = [];
+
+        for (let i = 0; i < NUM_STATIC; i++) {
+            const img = document.createElement("img");
+            img.src = "friend_face.png";
+            img.className = "face";
+            document.body.appendChild(img);
+            const obj = {
+                el: img,
+                x: Math.random() * (window.innerWidth - 130),
+                y: Math.random() * (window.innerHeight - 130),
+                dx: (Math.random() - 0.5) * 8,
+                dy: (Math.random() - 0.5) * 8,
+                damping: 0.9
+            };
+            makeInteractive(obj);
+            faces.push(obj);
+        }
+
+        function makeInteractive(face) {
+            let isDragging = false;
+            let offsetX, offsetY;
+
+            face.el.addEventListener("mousedown", startDrag);
+            face.el.addEventListener("touchstart", startDrag);
+
+            function startDrag(e) {
+                isDragging = true;
+                const evt = e.touches ? e.touches[0] : e;
+                offsetX = evt.clientX - face.x;
+                offsetY = evt.clientY - face.y;
+
+                document.addEventListener("mousemove", onDrag);
+                document.addEventListener("mouseup", stopDrag);
+                document.addEventListener("touchmove", onDrag);
+                document.addEventListener("touchend", stopDrag);
+            }
+
+            function onDrag(e) {
+                if (!isDragging) return;
+                const evt = e.touches ? e.touches[0] : e;
+                face.x = evt.clientX - offsetX;
+                face.y = evt.clientY - offsetY;
+                face.dx = (Math.random() - 0.5) * 10;
+                face.dy = (Math.random() - 0.5) * 10;
+            }
+
+            function stopDrag() {
+                isDragging = false;
+                document.removeEventListener("mousemove", onDrag);
+                document.removeEventListener("mouseup", stopDrag);
+                document.removeEventListener("touchmove", onDrag);
+                document.removeEventListener("touchend", stopDrag);
+            }
+        }
+
+        function animate() {
+            for (let face of faces) {
+                face.x += face.dx;
+                face.y += face.dy;
+                face.dy += 0.5; // gravity
+
+                // Bounce logic with damping
+                if (face.x <= 0 || face.x >= window.innerWidth - 130) {
+                    face.dx *= -face.damping;
+                    face.x = Math.max(0, Math.min(window.innerWidth - 130, face.x));
+                }
+
+                if (face.y >= window.innerHeight - 130) {
+                    face.dy *= -face.damping;
+                    face.y = window.innerHeight - 130;
+                    // friction to stop over time
+                    if (Math.abs(face.dy) < 1) face.dy = 0;
+                    if (Math.abs(face.dx) < 0.5) face.dx = 0;
+                }
+
+                face.el.style.left = face.x + "px";
+                face.el.style.top = face.y + "px";
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        document.getElementById("btn-rain").addEventListener("click", () => {
+            const count = Math.floor(Math.random() * 15) + 5;
+            for (let i = 0; i < count; i++) {
+                const rainImg = document.createElement("img");
+                rainImg.src = "friend_face.png";
+                rainImg.className = "falling";
+                rainImg.style.left = Math.random() * (window.innerWidth - 130) + "px";
+                rainImg.style.top = "-150px";
+                rainImg.style.animationDuration = (Math.random() * 2 + 1) + "s";
+                document.body.appendChild(rainImg);
+                setTimeout(() => {
+                    rainImg.remove();
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>
